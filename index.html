@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>JS demo</title>
+<script type="text/javascript" src="jquery-1.11.1.js"></script>
+<style>
+    input {
+        width: 200px;
+        height: 16px;
+        line-height: 16px;
+        font-size: 12px;
+        color: #333;
+        border: 1px solid #ddd;
+        padding: 4px 9px;
+        background-color: #fff;
+        display: inline-block;
+    }
+    input.error {
+        border-color: #da3a4c;
+    }
+    p {
+        width: 220px;
+        height: 26px;
+        line-height: 26px;
+        font-size: 12px;
+        color: #ff2200;
+        display: none;
+    }
+</style>
+<script type="text/javascript">
+
+
+	$(function(){
+
+		// $("body").on("click", function(e) {
+
+		// 	stopPropagationFun(e);
+
+		// 	console.log(33333);
+
+		// }, "a");
+
+		// $("body").on("click", "a", function(e) {
+		// 	stopPropagationFun(e);
+		// 	var o = this,
+  //           	xpath = o.tagName;
+  //           while (o = o.parentNode) {
+  //           	xpath = o.tagName + '/' + xpath;
+  //           	if (o.tagName == 'BODY') break;
+  //          	}
+		// 	console.log('/' + xpath);
+		// });
+
+        $("body").on({
+
+            blur: function() {
+
+                var $self = $(this);
+                var curJson = {
+
+                    obj: this,
+                    isType: this.type,
+                    isNull: this.value,
+                    isMin: this.min,
+                    isMax: this.max,
+                    isWrong: this.wrong,
+                    isFormat: this.format,
+                    isChange: this.change,
+                    isPassword: this.password,
+                    isConfirmPwd: this.confirmPwd,
+                    isCBFun: function(status) {
+                        $("#status").html(status).show();
+                    }
+
+                };
+
+                //txtBlurFun(curJson);
+                txtBlurFun2(this, regJson.userName);
+
+            }
+
+        }, "#test");
+
+
+	});
+
+    var vRegExp = {
+        mobile: /^0?(13|15|18|14|17)[0-9]{9}$/,
+        ring: /^0(([1-9]\d)|([3-9]\d{2}))\d{8}$/,
+        copName: /^[ -.0-;?-\~=\u4e00-\u9fbb\u3009-\u3012\uff02-\uff64\u2011-\u2016\u3002\u3003\u2019\u2020\u201d\u201e]*$/,
+        realName: /^[\u4e00-\u9fa5]+$/,
+        addName: /^[\u4e00-\u9fa5a-zA-Z]+$/,
+        idCert: /^(\d{14}|\d{17})(\d|[xX])$/,
+        num: /^\d{10,20}$/,
+        f0Num: /^[1-9]\d*$/,
+        numPoint: /^(0|[1-9]\d*)(\.\d{0,2})?$/,
+        isChinese: /^[\u4e00-\u9fa5]+$/
+    };
+
+    var vRules = {
+        isNull: function(str) {
+            return (str == "" || typeof str != "string");
+        },
+        isMobile: function(str) {
+            return new RegExp(configInfo.vRegExp.mobile).test(str);
+        },
+        isRing: function(str) {
+            return new RegExp(configInfo.vRegExp.ring).test(str);
+        },
+        isCopDetail: function(str) {
+            return new RegExp(configInfo.vRegExp.copName).test(str);
+        },
+        isRealName: function(str) {
+            return new RegExp(configInfo.vRegExp.realName).test(str);
+        },
+        isAddName: function(str) {
+            return new RegExp(configInfo.vRegExp.addName).test(str);
+        },
+        isIDCert: function(str) {
+            return new RegExp(configInfo.vRegExp.idCert).test(str);
+        },
+        isNum: function(str) {
+            return new RegExp(configInfo.vRegExp.num).test(str);
+        },
+        isF0Num: function(str) {
+            return new RegExp(configInfo.vRegExp.f0Num).test(str);
+        },
+        isNumPoint: function(str) {
+            return new RegExp(configInfo.vRegExp.numPoint).test(str);
+        },
+        isChinese: function(str) {
+            return new RegExp(vRegExp.isChinese).test(str);
+        }
+    };
+
+    var vPrompt = {
+        isNull: '不能为空',
+        isMin: '最多不超过2个字符',
+        isMax: '至少输入5个字符',
+        isMinMax: '长度为2-5个字符',
+        isWrong: '只能输入中文',
+        isFormat: '格式不对',
+        isChange: '',
+        isPassword: '',
+        isConfirmPwd: '',
+        isCBFun: ''
+    };
+
+    var regJson = {
+            userName: {
+                '请填写您的真实姓名': /^\S/,
+                '收货人只能填写中文': /^[\u4e00-\u9fa5]+$/,
+                '收货人长度为2-5个字符': /^[\u4e00-\u9fa5]{2,5}$/,
+                '收货人不可含有"先生"/"小姐"': /(?!.*先生.*|.*小姐.*)^[\u4e00-\u9fff]{0,}$/g
+            },
+            nameCert: {
+                '请填写您的真实姓名': /^\S/,
+                '收货人只能填写中文': /^[\u4e00-\u9fa5]+$/,
+                '收货人长度为2-5个字符': /^[\u4e00-\u9fa5]{2,5}$/,
+                '收货人不可含有"先生"/"小姐"': /(?!.*先生.*|.*小姐.*)^[\u4e00-\u9fff]{0,}$/g
+            }
+    };
+
+	/**
+     * @ 阻止冒泡事件方法
+     * @ 20151111 japin.pan
+     * @param {Object} [e] [鼠标操作事件对象]
+     * @return none
+     */
+    // function stopPropagationFun(e) {
+    //     if (e && e.stopPropagation) {
+    //         e.stopPropagation();
+    //     } else {
+    //         window.e.cancelBubble = true;
+    //     }
+    // }
+
+    function txtBlurFun2(obj, json, callback) {
+        if (!json || typeof json !== "object") return;
+        var objVal = $.trim(obj.value);
+        for (var i in json) {
+            if (!regFun(json[i], objVal)) {
+                $("#tip").html(i).show();
+                $(obj).addClass("error");
+                callback && callback();
+                return false;
+            }
+            $("#tip").html("").hide();
+            $(obj).removeClass("error");
+            callback && callback();
+        }
+    }
+
+    function regFun(reg, val) {
+        return new RegExp(reg).test(val);
+    }
+
+    function txtBlurFun(json) {
+        var self = json.obj,
+            selfVal = trim(self.value);
+
+        if (selfVal) {
+            console.log(selfVal);
+            console.log(self.max);
+            if (self.min && self.max && ((parseInt(self.min) >= selfVal.length) || (selfVal.length >= parseInt(self.max)))) {
+                $("#tip").html(vPrompt.isMinMax).show();
+                $(self).addClass("error");
+                json.isCBFun && json.isCBFun(0);
+                return false;
+            }
+            if (self.min && (selfVal.length > parseInt(self.min)) && !self.max) {
+                $("#tip").html(vPrompt.isMin).show();
+                $(self).addClass("error");
+                json.isCBFun && json.isCBFun(0);
+                return false;
+            }
+            if (self.max && (selfVal.length < parseInt(self.max)) && !self.min) {
+                $("#tip").html(vPrompt.isMax).show();
+                $(self).addClass("error");
+                json.isCBFun && json.isCBFun(0);
+                return false;
+            }
+            $("#tip").html("").hide();
+            $(self).removeClass("error");
+            json.isCBFun && json.isCBFun(1);
+        } else {
+            $("#tip").html(vPrompt.isNull).show();
+            $(self).addClass("error");
+            json.isCBFun && json.isCBFun(0);
+        }
+        // if (json) {
+        //     for (var i in json) {
+        //         if (json[i]) {
+        //             console.log(json[i]);
+
+        //         }
+        //     }
+        // }
+    }
+
+</script>
+</head>
+<body>
+    <input type="text" id="test" name="test" min="2" max="5">
+    <p id="tip"></p>
+    <p id="status"></p>
+	<!-- <input type="button" id="get" value="get" data-times="0" >
+	<input type="button" id="clear" value="clear" data-times="0" >
+	<div id="addrList"><a href="javascript:;">54545</a><a href="javascript:;">7777</a><a href="javascript:;">99999</a></div>
+	<div id="resp"></div> -->
+</body>
+</html>
