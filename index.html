@@ -196,58 +196,11 @@
         return new RegExp(reg).test(val);
     }
 
-    function txtBlurFun(json) {
-        var self = json.obj,
-            selfVal = trim(self.value);
-
-        if (selfVal) {
-            console.log(selfVal);
-            console.log(self.max);
-            if (self.min && self.max && ((parseInt(self.min) >= selfVal.length) || (selfVal.length >= parseInt(self.max)))) {
-                $("#tip").html(vPrompt.isMinMax).show();
-                $(self).addClass("error");
-                json.isCBFun && json.isCBFun(0);
-                return false;
-            }
-            if (self.min && (selfVal.length > parseInt(self.min)) && !self.max) {
-                $("#tip").html(vPrompt.isMin).show();
-                $(self).addClass("error");
-                json.isCBFun && json.isCBFun(0);
-                return false;
-            }
-            if (self.max && (selfVal.length < parseInt(self.max)) && !self.min) {
-                $("#tip").html(vPrompt.isMax).show();
-                $(self).addClass("error");
-                json.isCBFun && json.isCBFun(0);
-                return false;
-            }
-            $("#tip").html("").hide();
-            $(self).removeClass("error");
-            json.isCBFun && json.isCBFun(1);
-        } else {
-            $("#tip").html(vPrompt.isNull).show();
-            $(self).addClass("error");
-            json.isCBFun && json.isCBFun(0);
-        }
-        // if (json) {
-        //     for (var i in json) {
-        //         if (json[i]) {
-        //             console.log(json[i]);
-
-        //         }
-        //     }
-        // }
-    }
-
 </script>
 </head>
 <body>
     <input type="text" id="test" name="test" min="2" max="5">
     <p id="tip"></p>
     <p id="status"></p>
-	<!-- <input type="button" id="get" value="get" data-times="0" >
-	<input type="button" id="clear" value="clear" data-times="0" >
-	<div id="addrList"><a href="javascript:;">54545</a><a href="javascript:;">7777</a><a href="javascript:;">99999</a></div>
-	<div id="resp"></div> -->
 </body>
 </html>
